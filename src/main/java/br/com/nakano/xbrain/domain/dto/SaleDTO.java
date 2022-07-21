@@ -8,8 +8,9 @@ import lombok.Data;
 @Data
 public class SaleDTO implements Serializable {
     
+    private String productName;
     private BigDecimal value;
-    private Integer vendorId;
-    private String vendorName;
+    private Integer sellerId;
+    private String sellerName;
 
 }

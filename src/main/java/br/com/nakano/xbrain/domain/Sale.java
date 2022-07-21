@@ -8,28 +8,34 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "sale")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sale implements Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer saleId;
+    private String productName;
     private BigDecimal valueOfSale;
     private LocalDate dateOfSale;
-    private Integer vendorId;
-    private String vendorName;
+    @JoinColumn(name = "seller_id")
+    private Integer sellerId;
 
-    public Sale (BigDecimal valueOfSale, LocalDate dateOfSale, Integer vendorId, String vendorName) {
+    public Sale (String productName, BigDecimal valueOfSale, LocalDate dateOfSale, Integer sellerId) {
+        this.productName = productName;
         this.valueOfSale = valueOfSale;
         this.dateOfSale = dateOfSale;
-        this.vendorId = vendorId;
-        this.vendorName = vendorName;
+        this.sellerId = sellerId;
     }
 
 }
