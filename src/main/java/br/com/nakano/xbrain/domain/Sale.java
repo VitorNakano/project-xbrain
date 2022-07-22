@@ -10,7 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,8 +30,14 @@ public class Sale implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer saleId;
+    @ApiModelProperty(value = "Product")
+    @NotNull
     private String productName;
+    @ApiModelProperty(name = "Value")
+    @NotNull
     private BigDecimal valueOfSale;
+    @NotNull
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate dateOfSale;
     @JoinColumn(name = "seller_id")
     private Integer sellerId;

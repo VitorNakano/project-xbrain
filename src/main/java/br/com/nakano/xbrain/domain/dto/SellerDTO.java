@@ -1,5 +1,6 @@
 package br.com.nakano.xbrain.domain.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SellerDTO {
+public class SellerDTO implements Serializable {
     
     private String sellerName;
     private Integer allSales;

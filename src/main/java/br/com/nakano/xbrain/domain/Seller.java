@@ -3,6 +3,7 @@ package br.com.nakano.xbrain.domain;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class Seller implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer sellerId;
     @Column(nullable = false)
+    @NotNull
     private String sellerName;
 
     public Seller(String sellerName) {

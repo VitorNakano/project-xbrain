@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import br.com.nakano.xbrain.domain.Seller;
@@ -28,31 +29,21 @@ public class SellerService {
         return sellerRepository.findAll();
     }
 
-/*
- * Return Seller Name
- * All Sales
- * Average of Sales between Dates as parameters
- * 
- * Try use GROUP BY and COUNT to resolve the problem
- */
-
-    public List<SellerDTO> listSellerBetweenDates(LocalDate initialDate, LocalDate lastDate, String timeInterval) throws Exception{
+    public List<SellerDTO> listSellerBetweenDates(LocalDate initialDate, LocalDate lastDate) throws Exception{
         try {
-            initialDate = LocalDate.now().minusMonths(6);
-            lastDate = LocalDate.now();
-            List<SellerDTO> listSellerDto = new ArrayList<>();
             validateDateRange(initialDate, lastDate);
+            isValidDate(initialDate, lastDate);
+            List<SellerDTO> listSellerDto = new ArrayList<>();   
             List<Seller> sellers = sellerRepository.findAll();    
             for(Seller seller : sellers) {
                 SellerDTO dto = new SellerDTO();
                 dto.setSellerName(sellerName(seller.getSellerId()));
                 dto.setAllSales(totalSales(seller.getSellerId()));
-                dto.setSalesAverage(averageSalesPerDays(initialDate, lastDate, seller.getSellerId(), timeInterval));
+                dto.setSalesAverage(averageSalesPerDays(initialDate, lastDate, seller.getSellerId()));
                 listSellerDto.add(dto);
             }
             return listSellerDto;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new Exception("The Given date is Invalid!");
         }
     }
@@ -61,6 +52,10 @@ public class SellerService {
         if(initialDate.isAfter(lastDate)) {
             throw new Exception("The Start Date must be before the End Date");
         }
+    }
+
+    private void isValidDate(LocalDate initialDate, LocalDate lastDate) {
+        // DateTimeFormat.ISO.DATE
     }
 
     private String sellerName(Integer sellerId) {
@@ -72,32 +67,13 @@ public class SellerService {
     }
 
     private BigDecimal averageSalesPerDays(LocalDate initialDate, LocalDate lastDate,
-     Integer sellerId, String timeInterval) throws Exception {
+     Integer sellerId) throws Exception {
         BigDecimal averageSales;
         Integer countOfSales = saleRepository.findByDateOfSaleBetweenAndSellerId(
             initialDate, lastDate, sellerId);
-        long dateInterval = setTimeInterval(initialDate, lastDate, timeInterval, countOfSales);
+        long dateInterval = ChronoUnit.DAYS.between(initialDate, lastDate);
         averageSales = BigDecimal.valueOf(countOfSales.doubleValue() / dateInterval)
             .setScale(2, RoundingMode.HALF_UP);
         return averageSales;
-    }
-
-    private long setTimeInterval(LocalDate initialDate, LocalDate lastDate,
-        String timeInterval, Integer countOfSales) throws Exception {
-        try {
-            long interval = 0;
-            if (timeInterval.toUpperCase().equals("D")) {
-            interval = ChronoUnit.DAYS.between(initialDate, lastDate);
-            } else if (timeInterval.toUpperCase().equals("W")) {
-            interval = ChronoUnit.WEEKS.between(initialDate, lastDate);
-            } else if (timeInterval.toUpperCase().equals("M")) {
-            interval = ChronoUnit.MONTHS.between(initialDate, lastDate);
-            } else if (timeInterval.toUpperCase().equals("Y")) {
-            interval = ChronoUnit.YEARS.between(initialDate, lastDate);
-            }
-            return interval;
-        } catch (Exception e) {
-            throw new Exception("Invalid Period!");
-        }
     }
 }
