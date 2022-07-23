@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import br.com.nakano.xbrain.domain.Seller;
@@ -32,7 +31,6 @@ public class SellerService {
     public List<SellerDTO> listSellerBetweenDates(LocalDate initialDate, LocalDate lastDate) throws Exception{
         try {
             validateDateRange(initialDate, lastDate);
-            isValidDate(initialDate, lastDate);
             List<SellerDTO> listSellerDto = new ArrayList<>();   
             List<Seller> sellers = sellerRepository.findAll();    
             for(Seller seller : sellers) {
@@ -54,12 +52,8 @@ public class SellerService {
         }
     }
 
-    private void isValidDate(LocalDate initialDate, LocalDate lastDate) {
-        // DateTimeFormat.ISO.DATE
-    }
-
     private String sellerName(Integer sellerId) {
-        return sellerRepository.findById(sellerId).get().getSellerName();
+        return sellerRepository.getReferenceById(sellerId).getSellerName();
     }
 
     private Integer totalSales(Integer sellerId) {

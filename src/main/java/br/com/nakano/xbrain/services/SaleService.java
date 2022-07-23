@@ -24,6 +24,7 @@ public class SaleService {
     public void makeSale(SaleDTO saleDto) throws Exception {
         Seller seller;
         try {
+            if (saleDto.getProductName().isBlank()) throw new Exception("Inform the product");
             seller = findSeller(saleDto.getSellerId());
             completeSale(saleDto, seller);
         } catch (Exception e) {
