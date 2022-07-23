@@ -1,5 +1,7 @@
 package br.com.nakano.xbrain.repositories;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,32 @@ public class TestSaleRepository {
         try {
             Integer count = repository.countOfSale(0);
             Assertions.assertTrue(count.compareTo(0) == 0);
+        } catch (Exception e) {
+            Assertions.fail("Errors");
+        }
+    }
+
+    @Test
+    @DisplayName("Should return a Count 0 with an invalid Date sequence")
+    public void shouldReturnCountZeroWithInvalidDateSequence() {
+        try {
+            LocalDate initialDate = LocalDate.now();
+            LocalDate finalDate = LocalDate.now().minusMonths(6);
+            Integer count = repository.findByDateOfSaleBetweenAndSellerId(initialDate, finalDate, Integer.valueOf(1));
+            Assertions.assertTrue(count.compareTo(0) == 0);
+        } catch (Exception e) {
+            Assertions.fail("Errors");
+        }
+    }
+
+    @Test
+    @DisplayName("Should return a Count greater than 1 with a valid Date sequence")
+    public void shouldReturnCountGreaterThanOneWithValidDateSequence() {
+        try {
+            LocalDate initialDate = LocalDate.now().minusMonths(6);
+            LocalDate finalDate = LocalDate.now();
+            Integer count = repository.findByDateOfSaleBetweenAndSellerId(initialDate, finalDate, Integer.valueOf(1));
+            Assertions.assertTrue(count.compareTo(0) > 0);
         } catch (Exception e) {
             Assertions.fail("Errors");
         }

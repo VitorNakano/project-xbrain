@@ -16,7 +16,7 @@ import br.com.nakano.xbrain.repositories.SellerRepository;
 public class SaleService {
     
     @Autowired
-    private SellerRepository SellerRepository;
+    private SellerRepository sellerRepository;
 
     @Autowired
     private SaleRepository saleRepository;
@@ -29,14 +29,14 @@ public class SaleService {
             completeSale(saleDto, seller);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Impossible to complete the Sale.");
+            throw new Exception("Cannot make the sale.");
         }
     }
 
     private void completeSale(SaleDTO saleDto, Seller seller) throws Exception {
         try {
-            Sale sale = new Sale(saleDto.getProductName(), saleDto.getValue(), LocalDate.now(),
-            seller.getSellerId());
+            Sale sale = new Sale(saleDto.getProductName(),
+            saleDto.getValue(), LocalDate.now(), seller.getSellerId());
             validateSale(sale);
             saleRepository.save(sale);
         } catch (Exception e) {
@@ -65,10 +65,10 @@ public class SaleService {
         if(id.compareTo(0) == 0) {
             throw new Exception("ID 0 don't exist.");
         }
-        if (SellerRepository.getReferenceById(id) == null) {
+        if (sellerRepository.findById(id).isEmpty()) {
             throw new Exception("ID Seller don't exist.");
         } else {
-            return SellerRepository.getReferenceById(id);
+            return sellerRepository.getReferenceById(id);
         }
     }
 

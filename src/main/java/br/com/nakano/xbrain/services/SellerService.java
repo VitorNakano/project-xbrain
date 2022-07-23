@@ -53,7 +53,7 @@ public class SellerService {
     }
 
     private String sellerName(Integer sellerId) {
-        return sellerRepository.getReferenceById(sellerId).getSellerName();
+        return sellerRepository.findById(sellerId).get().getSellerName();
     }
 
     private Integer totalSales(Integer sellerId) {
